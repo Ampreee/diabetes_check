@@ -5,16 +5,12 @@ from PIL import Image
 import pytesseract
 import io
 import json
-import time
 
-
-def analyse_file(uploaded_file, return_text=False):
+def analyse_file(uploaded_file):
     if not uploaded_file:
         return "No file provided.", ""
-
     file_bytes = uploaded_file.read()
     content_type = uploaded_file.type
-
     if content_type == "application/pdf":
         pdf_reader = PdfReader(io.BytesIO(file_bytes))
         text = "\n".join(p.extract_text() or "" for p in pdf_reader.pages)
@@ -24,53 +20,52 @@ def analyse_file(uploaded_file, return_text=False):
     else:
         text = file_bytes.decode("utf-8", errors="ignore")
 
-    data = {
-        "prompt": "What is the likelihood of diabetes for this patient?",
-        "context": text,
-    }
-
-    api_url = "http://localhost:8000/chat/"
+    data = {"context": text}
+    api_url = "http://localhost:8000/analyze/"
     response = requests.post(api_url, data=data, stream=True)
 
     def stream_response():
         for line in response.iter_lines():
             if not line:
                 continue
-            msg = json.loads(line.decode("utf-8"))
-            if msg.get("role") == "assistant":
-                yield msg["content"] 
+            try:
+                msg = json.loads(line.decode("utf-8"))
+                if msg.get("role") == "assistant":
+                    yield msg["content"]
+            except Exception as e:
+                yield f"Error decoding line: {line} - {e}"
 
     with st.spinner("Analyzing..."):
         placeholder = st.empty()
-        full_response = ""
+        result = ""
         for chunk in stream_response():
-            full_response += chunk
-            placeholder.markdown(chunk, unsafe_allow_html=True)  # Only show the latest chunk
+            result = chunk
+            placeholder.markdown(chunk, unsafe_allow_html=True)
+    return result, text
 
-    return (full_response, text) if return_text else full_response
-
-
-def ask_ai(question: str, extracted_text: str, chat_history=None):
-    api_url = "http://localhost:8000/chat/"
+def ask_ai(question: str, analysis: str, context: str):
+    api_url = "http://localhost:8000/ask/"
     data = {
-        "prompt": question,
-        "context": extracted_text
+        "question": question,
+        "analysis": analysis,
+        "context": context
     }
-
-    with st.spinner("Getting answer..."):
-        response = requests.post(api_url, data=data, stream=True)
-        full_answer = ""
-        placeholder = st.empty()
-
+    response = requests.post(api_url, data=data, stream=True)
+    def stream_response():
         for line in response.iter_lines():
             if not line:
                 continue
             try:
-                msg = json.loads(line)
-                if msg["role"] == "assistant":
-                    full_answer += msg["content"]
-                    placeholder.markdown(full_answer, unsafe_allow_html=True)
+                msg = json.loads(line.decode("utf-8"))
+                if msg.get("role") == "assistant":
+                    yield msg["content"]
             except Exception as e:
-                st.error(f"Error decoding line: {line} - {e}")
+                yield f"Error decoding line: {line} - {e}"
 
-    return full_answer
+    with st.spinner("Getting answer..."):
+        placeholder = st.empty()
+        answer = ""
+        for chunk in stream_response():
+            answer = chunk
+            placeholder.markdown(chunk, unsafe_allow_html=True)
+    return answer

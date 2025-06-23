@@ -123,24 +123,43 @@ def handle_google_callback():
 
 def file_upload_and_analysis_ui():
     st.subheader("Upload Health Record for Diabetes Check")
-    uploaded_file = st.file_uploader("Upload file (PDF, image, or text)", type=["pdf", "jpg", "jpeg", "png", "bmp", "tiff", "csv", "txt"])
-    if uploaded_file:
-        result, extracted_text = analyse_file(uploaded_file, return_text=True)  
-        st.session_state.uploaded_text = extracted_text
+    uploaded_file = st.file_uploader(
+        "Upload file (PDF, image, or text)",
+        type=["pdf", "jpg", "jpeg", "png", "bmp", "tiff", "csv", "txt"]
+    )
+    if uploaded_file is not None:
+        # Store a unique identifier (e.g., name or hash) for the file
+        file_id = uploaded_file.name
+        # Only analyze if this file hasn't been analyzed yet
+        if st.session_state.get("last_uploaded_file") != file_id:
+            result, extracted_text = analyse_file(uploaded_file)
+            st.session_state.uploaded_text = extracted_text
+            st.session_state.analysis_result = result
+            st.session_state.last_uploaded_file = file_id
 
 def ai_chat_ui():
-    st.subheader("Ask Questions About Your Uploaded Data")
-    if not st.session_state.uploaded_text:
-        st.info("Upload a file first to chat about it.")
+    st.subheader("Ask Questions About the Analysis")
+    if not st.session_state.get("analysis_result"):
+        st.info("Upload and analyze a file first.")
         return
-    user_input = st.text_input("Ask a question:")
-    if st.button("Send") and user_input.strip():
-        answer = ask_ai(user_input, st.session_state.uploaded_text, st.session_state.chat_history)
-        st.session_state.chat_history.append((user_input, answer))
-        st.markdown(f"**You:** {user_input}")
-        st.markdown(f"**AI:** {answer}")
 
-    if st.session_state.chat_history:
+    user_input = st.text_input("Ask a question about the analysis:")
+    send_clicked = st.button("Send")
+
+    if send_clicked and user_input.strip():
+        # Get the answer (this streams and accumulates)
+        answer = ask_ai(
+            user_input,
+            st.session_state.analysis_result,
+            st.session_state.uploaded_text
+        )
+        print(answer)
+        # Only now, after streaming is done, append to history ONCE
+        if "chat_history" not in st.session_state:
+            st.session_state.chat_history = []
+        st.session_state.chat_history.append((user_input, answer))
+
+    if st.session_state.get("chat_history"):
         st.markdown("### Previous Q&A")
         for q, a in st.session_state.chat_history:
             st.markdown(f"**You:** {q}")
