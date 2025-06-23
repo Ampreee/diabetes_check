@@ -1,0 +1,13 @@
+streamlit
+sqlalchemy
+streamlit-authenticator
+oauthlib
+requests
+python-dotenv
+openai
+PyPDF2
+pytesseract
+Pillow
+pydantic-ai
+fastapi
+uvicorn
