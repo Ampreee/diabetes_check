@@ -7,6 +7,7 @@ import io
 import json
 import time
 
+
 def analyse_file(uploaded_file, return_text=False):
     if not uploaded_file:
         return "No file provided.", ""
@@ -40,7 +41,11 @@ def analyse_file(uploaded_file, return_text=False):
                 yield msg["content"] 
 
     with st.spinner("Analyzing..."):
-        full_response = st.write_stream(stream_response)
+        placeholder = st.empty()
+        full_response = ""
+        for chunk in stream_response():
+            full_response += chunk
+            placeholder.markdown(chunk, unsafe_allow_html=True)  # Only show the latest chunk
 
     return (full_response, text) if return_text else full_response
 

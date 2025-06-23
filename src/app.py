@@ -127,8 +127,6 @@ def file_upload_and_analysis_ui():
     if uploaded_file:
         result, extracted_text = analyse_file(uploaded_file, return_text=True)  
         st.session_state.uploaded_text = extracted_text
-        st.markdown("### Diabetes Prediction Result")
-        st.write(result)
 
 def ai_chat_ui():
     st.subheader("Ask Questions About Your Uploaded Data")
