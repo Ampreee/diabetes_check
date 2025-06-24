@@ -69,15 +69,14 @@ README.md
     ```bash
     streamlit run src/app.py
     ```
+   For Backend
+    ```bash
+    uvicorn src.api:app --reload
+    ```
 
    Or use Docker:
     ```bash
     docker-compose up --build
-    ```
-
-5. **Run Backend**
-    ```bash
-    uvicorn src.api:app --reload
     ```
 
 ---
