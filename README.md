@@ -73,7 +73,8 @@ README.md
     ```bash
     uvicorn src.api:app --reload
     ```
-
+   If using backend then change endpoint chatbot.py where it's written http://backend:8000/ to http://localhost:8000/
+   
    Or use Docker:
     ```bash
     docker-compose up --build
