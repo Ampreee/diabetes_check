@@ -21,7 +21,6 @@ AUTH_URL = "https://accounts.google.com/o/oauth2/v2/auth"
 TOKEN_URL = "https://oauth2.googleapis.com/token"
 USER_INFO_URL = "https://www.googleapis.com/oauth2/v2/userinfo"
 
-# Session state setup
 for key in ["authenticated", "user_email", "username", "chat_history", "uploaded_text"]:
     if key not in st.session_state:
         st.session_state[key] = False if key == "authenticated" else None if key != "chat_history" else []
@@ -128,9 +127,7 @@ def file_upload_and_analysis_ui():
         type=["pdf", "jpg", "jpeg", "png", "bmp", "tiff", "csv", "txt"]
     )
     if uploaded_file is not None:
-        # Store a unique identifier (e.g., name or hash) for the file
         file_id = uploaded_file.name
-        # Only analyze if this file hasn't been analyzed yet
         if st.session_state.get("last_uploaded_file") != file_id:
             result, extracted_text = analyse_file(uploaded_file)
             st.session_state.uploaded_text = extracted_text
@@ -147,14 +144,11 @@ def ai_chat_ui():
     send_clicked = st.button("Send")
 
     if send_clicked and user_input.strip():
-        # Get the answer (this streams and accumulates)
         answer = ask_ai(
             user_input,
             st.session_state.analysis_result,
             st.session_state.uploaded_text
         )
-        print(answer)
-        # Only now, after streaming is done, append to history ONCE
         if "chat_history" not in st.session_state:
             st.session_state.chat_history = []
         st.session_state.chat_history.append((user_input, answer))

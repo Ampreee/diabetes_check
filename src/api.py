@@ -1,4 +1,3 @@
-# api.py
 from fastapi import FastAPI, File, UploadFile, Form
 from fastapi.responses import StreamingResponse
 from fastapi.middleware.cors import CORSMiddleware
@@ -15,7 +14,6 @@ import pytesseract
 
 app = FastAPI()
 
-# CORS for Streamlit
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
