@@ -21,7 +21,7 @@ def analyse_file(uploaded_file):
         text = file_bytes.decode("utf-8", errors="ignore")
 
     data = {"context": text}
-    api_url = "http://localhost:8000/analyze/"
+    api_url = "http://backend:8000/analyze/"
     response = requests.post(api_url, data=data, stream=True)
 
     def stream_response():
@@ -44,7 +44,7 @@ def analyse_file(uploaded_file):
     return result, text
 
 def ask_ai(question: str, analysis: str, context: str):
-    api_url = "http://localhost:8000/ask/"
+    api_url = "http://backend:8000/ask/"
     data = {
         "question": question,
         "analysis": analysis,

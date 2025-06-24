@@ -19,7 +19,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    command: streamlit run src/app.py --server.port=8501 --server.address=0.0.0.0
+    command: streamlit run src/app.py --server.port=8501 
     volumes:
       - ./src:/app/src
       - ./.env:/app/.env
