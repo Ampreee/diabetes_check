@@ -41,10 +41,10 @@ src/
     prompts.py           
 .env.example
 .gitignore
-Dockerfile
 docker-compose.yml
-requirements.txt
+Dockerfile
 README.md
+requirements.txt
 ```
 
 ---
