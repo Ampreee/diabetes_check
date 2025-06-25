@@ -82,3 +82,27 @@ requirements.txt
 
 ---
 
+## Images for Reference
+1. **Login Page**
+
+<img width="826" alt="Screenshot 2025-06-25 141130" src="https://github.com/user-attachments/assets/d07f0a31-1678-4887-8c17-be331167fe1d" />
+
+2. **Register Page**
+
+<img width="803" alt="Screenshot 2025-06-25 141138" src="https://github.com/user-attachments/assets/bd221ded-823e-4a3a-8f89-a20345568a0a" />
+
+3. **Upload Pdf**
+
+<img width="504" alt="Screenshot 2025-06-25 141159" src="https://github.com/user-attachments/assets/28bda1db-1f81-466e-ad8b-891fccea8b7c" />
+
+4. **Analysis of Pdf**
+
+<img width="699" alt="Screenshot 2025-06-25 143026" src="https://github.com/user-attachments/assets/9fb9d1b9-4d64-4880-80f2-21b28c3ce0cb" />
+
+<img width="486" alt="Screenshot 2025-06-25 143044" src="https://github.com/user-attachments/assets/bc640130-856b-472c-9769-786ce0152807" />
+
+5. **Chat bot about the analysis or report**
+
+<img width="666" alt="Screenshot 2025-06-25 143142" src="https://github.com/user-attachments/assets/69ff3c06-1d44-420c-a7db-666a243bc137" />
+
+---
